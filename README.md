@@ -19,8 +19,9 @@
 
 ## 诗库（两层）
 
-- **底库**：李白全集 1149 首（`references/libai_raw.json`，数据来自 [chinese-poetry](https://github.com/chinese-poetry/chinese-poetry)，MIT），用于原文自动核对与全集检索——引用诗句不靠模型记忆，杜绝背错原文
-- **精读库**：27 首名篇人工精读（`references/poems.md`），每首含原文、人话背景、情绪内核、生活·工作共鸣场景、金句、配图意境、日签关联，持续扩充，结构预留扩展杜甫、苏轼、王维等诗人
+- **底库**：李白全集 1149 首（`references/libai_raw.json`）+ 杜甫 70 首、苏轼词 44 首代表作精选（`references/poets_selected.json`，含词牌字段），数据来自 [chinese-poetry](https://github.com/chinese-poetry/chinese-poetry)，MIT——引用诗句自动核对原文，不靠模型记忆，杜绝背错
+- **精读库**：27 首名篇人工精读（`references/poems.md`），每首含原文、人话背景、情绪内核、生活·工作共鸣场景、金句、配图意境、日签关联，持续扩充（杜甫、苏轼精读扩充中）
+- **可选权威核对**：联网时可调搜韵开放 API（非商业），查历代笺注与版本异文；离线零依赖，所有核心功能不依赖网络
 
 ## 安装
 
