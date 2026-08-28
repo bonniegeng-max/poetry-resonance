@@ -25,6 +25,16 @@
 
 ## 安装
 
+方式一（ClawHub，推荐）：
+
+```bash
+npx clawhub install poetry-resonance
+# 或
+openclaw skills install @bonniegeng-max/poetry-resonance
+```
+
+方式二（GitHub 手动安装）：
+
 ```bash
 git clone https://github.com/bonniegeng-max/poetry-resonance.git
 cp -R poetry-resonance/poetry-resonance ~/.workbuddy/skills/
