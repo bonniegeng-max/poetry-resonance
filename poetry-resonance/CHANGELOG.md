@@ -3,6 +3,17 @@
 > **语言范围 / Language scope**：本文件与整个 skill 一样，有意仅用中文——服务对象是唐诗宋词，非中文语种没有对应素材。理由见 `SKILL.md` →「语言范围 / Language scope」。
 > This changelog is intentionally Chinese-only for the same reason the skill is: its subject matter is classical Chinese poetry.
 
+## v1.4.6 — 2026-09-13
+
+修正 v1.4.5 里一处**表述与行为不一致**的问题（ClawHub 重新扫描后 ClawScan 新指出的点）：
+
+- v1.4.5 的隐私段写成"只读写两个文件"，但 skill 的**扩库流程**会把新诗追加进 `references/poems.md`（skill 自身目录内）。两处说法矛盾，ClawScan 因此把结论换成「对已安装 reference 库有持久写权限，却声称只写两个数据文件」。
+- 修正为**如实分列两个位置**：① 用户数据 = `~/.workbuddy/poetry-resonance/` 下的 `profile.md` / `progress.json`；② skill 自带的 `references/*.md` = **仅在用户明确要求扩库时追加**，不自动写、不删条目、不触碰目录外文件。
+- 模式 B 第 9 步由"顺手入库"改为**先问用户是否入库**，同意后再写——消除"自动写 skill 自身目录"的观感。
+- 「使用规则 · 扩库流程」与「约束」同步改为准确表述。
+
+SkillSpector 侧在 v1.4.5 已从 11 条 findings 归零（返回 `null`），静态分析 clean，本次不再有变化。
+
 ## v1.4.5 — 2026-09-13
 
 安全扫描修复。依据 ClawHub 扫描报告 `skill:poetry-resonance:1.4.4`（ClawScan 判 `suspicious` + SkillSpector 11 条 findings）。本次不改动任何诗词内容与输出质量，只调整行为边界与文档。

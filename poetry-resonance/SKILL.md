@@ -1,6 +1,6 @@
 ---
 name: poetry-resonance
-version: 1.4.5
+version: 1.4.6
 description: Connect Tang and Song poetry with everyday life — daily poem card, a line for a real moment, plain-language study notes, spaced-repetition review, weekly reading summary. 把唐诗宋词和真实生活连起来：今日日签 / 找一句诗 / 说人话拆解 / 背诗复习 / 读诗周记。五种模式（有感而发 / 学习沉淀 / 今日日签 / 复习验收 / 学习周报）+ 李白全集 + 杜甫苏轼精选诗库。Language scope: Chinese-only by design — the subject is Tang/Song classical Chinese poetry, and no multilingual variant exists or is planned. 中文触发词（须与诗词语境同现才激活）：诗词日签、每日诗词、今日一句、唐诗宋词、古诗配诗、找一句唐诗、诗词拆解、诗词深读、背诗复习、背诗抽查、读诗周记、诗人日签（李白/杜甫/苏轼）。单独出现的"复习""周报""拆解"属通用词，不触发本 skill。Not for academic criticism, metrical composition, or non-Chinese poetry. 零依赖纯本地；联网可选且可关（只发诗名/作者/诗句/城市名，见「数据边界」）。
 ---
 
@@ -69,27 +69,31 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 
 ## 本地数据与隐私 / Local data & privacy
 
-本 skill 只在本机读写两个文件，都在 `~/.workbuddy/poetry-resonance/` 下，与 skill 目录分开存放（升级、重装都不丢）：
+本 skill 只会碰到下面**两个位置**的文件，除此之外不读、不写、不枚举任何文件。
+
+**① 用户数据（两个文件）** —— 在 `~/.workbuddy/poetry-resonance/` 下，与 skill 目录分开存放（升级、重装都不丢）：
 
 | 文件 | 存什么 | 用来做什么 |
 |------|--------|-----------|
 | `profile.md` | 文案风格偏好、日签版式底线、在学诗人、联网开关、二维码开关 | 免去每次重复说偏好 |
 | `progress.json` | 诗名、首次学习日期、验收通过日期、复习日期、复习阶段 | 模式 D 艾宾浩斯复习排期 / 模式 E 周报统计 |
 
+**② skill 自带的诗库（不是用户数据）** —— `references/poems.md`、`references/themes.md` 等是 skill 安装时自带的内容文件。它们**只会在用户明确说"诗库加一首《XX》"时被追加写入**（见「使用规则 · 扩库流程」），不自动写、不删除既有条目；用户不发起扩库，这些文件就全程只读。
+
 **首次写入先取得同意（硬规则）**
-1. 第一次需要创建或更新任一文件前，先说明上面三件事（存什么、存在哪、做什么用），等用户点头；
+1. 第一次需要创建或更新 `profile.md` / `progress.json` 前，先说明上面三件事（存什么、存在哪、做什么用），等用户点头；
 2. 用户不同意 → 进入**无持久化模式**：偏好只在本次对话内生效，复习进度不落盘（模式 D 退化为当次抽查，模式 E 只报当次对话内的记录）；
 3. 用户随时可以：
-   - 说"别记了 / 不要写文件" → 停止一切本地写入，本次会话内有效
+   - 说"别记了 / 不要写文件" → 停止一切本地写入（含扩库），本次会话内有效
    - 说"看看你存了什么" → 读出两个文件的完整内容给用户看
    - 说"清空我的记录" → 删除 `progress.json`（或 `profile.md`），并确认删除结果
 
 **不收集、不上传**
-- 两个文件的内容**从不经网络发送**，也不写入日志、不做遥测；
-- **不读取 `~/.workbuddy/poetry-resonance/` 以外的任何用户文件**；
+- 上述文件的内容**从不经网络发送**，也不写入日志、不做遥测；
+- 不读取、不遍历这两个位置以外的任何用户文件；
 - 联网时的例外只有两个公开查询，且只发四个词之一（诗名/作者/诗句/城市名），详见下节「数据边界」。
 
-**Local files.** This skill reads and writes exactly two files under `~/.workbuddy/poetry-resonance/` — a preference file and a study-progress file — deliberately kept outside the skill directory so upgrades and reinstalls do not lose them. It requires an explicit first-run notice and consent (what, where, why) before the first write, offers a no-persistence mode if the user declines, and supports inspect / stop / delete on request. Contents of these files are never transmitted over the network and never logged; no files outside that directory are read.
+**Local files.** This skill touches files in exactly two places and nothing else. (1) **User data** — two files under `~/.workbuddy/poetry-resonance/`, a preference file and a study-progress file, deliberately outside the skill directory so upgrades and reinstalls do not lose them. An explicit first-run notice and consent (what, where, why) is required before the first write; a no-persistence mode is offered if the user declines; inspect / stop / delete are supported on request. (2) **The skill's own bundled library** — `references/poems.md` and `references/themes.md` ship with the skill and are appended to *only* when the user explicitly asks to add a poem; never written automatically and never used to remove existing entries. Contents of the user-data files are never transmitted over the network and never logged. No files outside these two locations are read, enumerated, or written.
 
 ## 背景
 
@@ -109,7 +113,7 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 
 使用规则：
 1. **引用核对**：任何模式引用诗句前，先查精读库（人工核定的通行版原文），没有再查底库（先 poets_selected.json 再 libai_raw.json）。**对外引用一律用通行版**（大众认知版，如《静夜思》必须用"床前明月光……举头望明月"）。底库为古籍版本（御定全唐诗），部分诗与通行版有字词差异，**严禁把古籍版异文当引用输出**——对外输出古籍异文会被读者误认为引用错误。底库仅用于全集检索、诗篇定位；版本差异只在用户主动问"原版是什么"时才讲，且要说明"古籍原版"与"通行版"的区别。底库也没有的才用自身知识，并标注"待核实"。
-2. **扩库流程**：用户说"诗库加一首《XX》"→ 从底库按诗名子串检索原文 → 人话拆解 + 共鸣场景设计 → 按结构追加进精读库。
+2. **扩库流程**（用户发起，写入 skill 自身目录）：用户说"诗库加一首《XX》"→ 从底库按诗名子串检索原文 → 人话拆解 + 共鸣场景设计 → 按结构追加进精读库（`references/poems.md`，必要时同步主题标签到 `references/themes.md`）。**只追加、不删除既有条目，且不触碰 skill 目录以外的任何文件**；用户不发起，这两个文件全程只读。
 3. **匹配优先级**：模式 A 匹配候选时精读库优先（有共鸣场景），底库作全集补充。
 
 ## 权威核对与外部服务（可选，联网时）
@@ -184,7 +188,7 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 6. **历代笺注**（仅深读档且联网时）：调搜韵 API，取 1-2 条历代评点**译成人话**带入（如《诗薮》评"欲穷千里目"——古人也觉得这句收得绝）。分寸红线：笺注是佐料不是主菜，翻不出人话宁可不用，严禁掉书袋
 7. 整理成学习笔记（markdown），问用户要不要存 ima 知识库 / 腾讯文档 / 本地文件
 8. 顺手送一句可发朋友圈的短文案
-9. 自动记录：将该诗写入 progress.json（first_learned=今天）；若该诗不在精读库，按扩库流程顺手入库（同时挂主题标签进 themes.md）
+9. 自动记录：将该诗写入 progress.json（first_learned=今天）；若该诗不在精读库，**先问用户要不要入库**，同意后再按扩库流程追加（同时挂主题标签进 themes.md）——不擅自写入 skill 自身目录
 
 **自动化触发（数据驱动）**：
 - **对比推荐**：用户连学同主题的诗（progress.json 近期记录 × themes.md 主题重合）时，主动提议："你最近学的《静夜思》和《月夜忆舍弟》都是思乡月，要不要对照读一次？"
@@ -263,4 +267,4 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 - 日签卡片版式不固定，按节气/主题灵活设计；两条底线：竖排为主、避免横竖混排，诗句列对齐不刻意错落
 - 底库数据来源：chinese-poetry 项目（github.com/chinese-poetry/chinese-poetry），MIT License
 - 外部 API（搜韵 / wttr.in）仅限诗词关键词与城市名查询，严禁外发用户任何个人内容；可用 `profile.md` 的 `online: false` 整体关闭（见"权威核对"章节数据边界）
-- 本地只读写 `~/.workbuddy/poetry-resonance/` 下的 `profile.md` 与 `progress.json`，首次写入先告知并取得同意（见"本地数据与隐私"）
+- 本地只碰两个位置：`~/.workbuddy/poetry-resonance/` 下的 `profile.md` 与 `progress.json`（首次写入先告知并取得同意），以及 skill 自身目录下的 `references/*.md`（仅在用户明确要求扩库时追加）；其余文件不读不写不枚举（见"本地数据与隐私"）
