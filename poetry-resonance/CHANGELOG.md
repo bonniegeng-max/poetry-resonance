@@ -1,24 +1,31 @@
 # CHANGELOG
 
-## v1.4.4 — 2026-09-13
+> **语言范围 / Language scope**：本文件与整个 skill 一样，有意仅用中文——服务对象是唐诗宋词，非中文语种没有对应素材。理由见 `SKILL.md` →「语言范围 / Language scope」。
+> This changelog is intentionally Chinese-only for the same reason the skill is: its subject matter is classical Chinese poetry.
 
-ClawHub 可发现性修复 + 门面精简（正文行为无变化）：
+## v1.4.5 — 2026-09-13
 
-- **v1.4.3（可发现性）**：ClawHub 分类由 `other` 改为 `knowledge, lifestyle`；主题标签补为 `chinese-poetry / daily-quote / libai / dufu / song-ci`（原 `sushi` 有歧义，换掉）。
-- **v1.4.4（描述精简）**：frontmatter `description` 由 744 字压缩至 496 字（-33%），保留全部高频触发词；新增英文问题句前置与 `Not for` 边界声明（学术考据 / 格律创作 / 非中文诗词）。
-- 正文新增「何时不用」「与谁不同」两节——会渲染到 ClawHub 页面正文，进搜索引擎与 AI 索引。
+安全扫描修复。依据 ClawHub 扫描报告 `skill:poetry-resonance:1.4.4`（ClawScan 判 `suspicious` + SkillSpector 11 条 findings）。本次不改动任何诗词内容与输出质量，只调整行为边界与文档。
 
-### 后续待办
+**主因修复**
+- **日签二维码改为按需嵌入（默认不带）**：原先要求每张卡片固定嵌入 `references/seal_qr.svg`，被 ClawScan 判为「forced promotion / output redirection，对诗词任务非必要且无 opt-in 控制」，是本次被判 suspicious 的唯一 unexpected finding。现在只在用户明确要求分享、或 `profile.md` 设 `qr: true` 时嵌入。
 
-- 精读库（references/poems.md）由当前 45 首逐步扩充至 60+ 首。
-- 本地 git clone 落后远端多个 commit，联网恢复后 `git pull` 对齐。
+**其余 findings**
+- **新增「语言范围 / Language scope」中英双语声明**：说明本 skill 有意仅支持中文（服务对象为唐诗宋词），无多语言版本也无相关计划 → 处理 SQP-3 语言类 6 条。
+- **新增「本地数据与隐私 / Local data & privacy」**：表格化说明 `profile.md` 与 `progress.json` 存什么、存在哪、做什么用；首次写入前必须先告知并取得同意，否则进入无持久化模式；提供查看 / 停止 / 删除入口 → 处理 SQP-2 隐私类 2 条。
+- **联网部分补充可信性与数据边界**：两个外部接口均只读、免 key、不读环境变量；表格列出各自"发出去的字段"（诗名/作者/诗句/城市名）；明确不传凭证与任何本地文件内容；新增 `online: false` 全局关闭开关 → 处理 E1（External Transmission）。
+- **安装命令锁版本**：`npx clawhub@0.23.3 install poetry-resonance` → 处理 RP1（MCP Rug Pull）与 T08。
+- **触发词收窄为词组**：`复习`/`周报`/`拆解` 这类会与日常用语重叠的通用词，改为「背诗复习」「读诗周记」「诗词拆解」等词组，并在 description 中注明单独出现的通用词不触发 → 处理 SQP-1（Overly Broad Trigger）。
+- **全部 references 文件补中英双语范围标注**（themes.md / weather_map.md / poems.md / poets_profile.md / seal_qr.svg / 两个 json）；天气映射去掉不必要的 `?lang=zh` 参数（映射本就用英文关键词）。
+
+**未改动**：五种模式的工作流、文案风格模板、精读库与底库内容、诗人档案与主题索引条目。
 
 ## v1.4.2 — 2026-09-03
 
 体检后调整（基于线上 v1.4.1，正文与线上一致，仅门面优化）：
 
-- 精简 frontmatter `description`：由 731 字压缩至 456 字（约 -38%），删除冗余修辞、将模式 A–E 描述改为紧凑短语、合并同类信息；**30 个触发词全部保留**，匹配入口不变。
-- 新增 `version` 字段（frontmatter），建立版本号管理习惯。注册表版本以发布时的 semver 为准（本次发布应为 1.4.2）。
+- 精简 frontmatter `description`：删除冗余修辞、将模式 A–E 描述改为紧凑短语、合并同类信息；匹配入口不变。
+- 新增 `version` 字段（frontmatter），建立版本号管理习惯。注册表版本以发布时的 semver 为准。
 
 ### 后续待办
 

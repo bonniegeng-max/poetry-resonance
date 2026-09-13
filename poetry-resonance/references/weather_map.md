@@ -1,6 +1,8 @@
 # 天气 → 诗映射表
 
-> 模式 C 日签的天气关联层。调用 wttr.in 免 key API（`https://wttr.in/<城市拼音>?format=j1`，取 current_condition 的 weatherDesc 英文关键词映射到下表类别；?lang=zh 可取中文描述）。查询只发城市名，禁止外发用户任何个人内容（同搜韵硬约束）。API 失败静默跳过，用户口报天气（"今天下雨"）可直接替代。
+> **语言范围 / Language scope**：本文件有意仅用中文——映射目标是汉语诗句，别的语种没有对应素材。This file is intentionally Chinese-only: it maps weather conditions to lines of classical Chinese poetry. 见 `SKILL.md` →「语言范围 / Language scope」。
+
+> 模式 C 日签的天气关联层。联网未关闭时调用 wttr.in 免 key API（`https://wttr.in/<城市拼音>?format=j1`），取 `current_condition` 的 `weatherDesc` **英文关键词**映射到下表类别。查询只发城市名一个字段，禁止外发用户任何个人内容（同搜韵硬约束）。API 失败静默跳过，用户口报天气（"今天下雨"）可直接替代。关闭方式：`profile.md` 里 `online: false`。
 
 ## 类别映射规则
 

@@ -1,5 +1,7 @@
 # 主题诗集索引
 
+> **语言范围 / Language scope**：本文件有意仅用中文——每一条目归类的都是汉语诗词，换成别的语种没有对应素材。This file is intentionally Chinese-only: every entry classifies classical Chinese poetry, for which no equivalent dataset exists in another language. 见 `SKILL.md` →「语言范围 / Language scope」。
+
 > 跨诗人按主题组织。模式 A 匹配时先在此定位主题，再去精读库/底库取详情。每个主题：场景速记 → 代表诗句（按贴切度排）。
 
 ## 孤独自处

@@ -1,5 +1,7 @@
 # 诗人档案 · 人生阶段线
 
+> **语言范围 / Language scope**：本文件有意仅用中文——记录对象是汉语诗人（李白/杜甫/苏轼），人名、诗题、阶段关键词都用中文表达。This file is intentionally Chinese-only: it profiles classical Chinese poets, whose names, poem titles and life-stage terms are expressed in Chinese. 见 `SKILL.md` →「语言范围 / Language scope」。
+
 > 模式 B 拆解时挂靠阶段；日签推荐理由可引用"人生阶段"做连接。人话优先，年代只做坐标。
 
 ## 李白（701-762）· 一句话主线：从"仰天大笑出门去"到"轻舟已过万重山"

@@ -1,7 +1,7 @@
 ---
 name: poetry-resonance
-version: 1.4.4
-description: Connect Tang and Song poetry with everyday life — daily poem card, a line for a real moment, plain-language study notes, spaced-repetition review, weekly reading summary. 把唐诗宋词和真实生活连起来：今日日签 / 找一句诗 / 说人话拆解 / 背诗复习 / 读诗周记（日签·每日诗词·今日一句·Chinese poetry daily quote）。含五种模式（有感而发 / 学习沉淀 / 今日日签 / 复习验收 / 学习周报）与李白全集 + 杜甫苏轼精选诗库。Not for academic criticism, metrical composition, or non-Chinese poetry. 触发词：日签、每日诗词、唐诗、宋词、古诗、诗词、李白、杜甫、苏轼、配诗、找一句诗、朋友圈文案、小红书文案、背诗、复习、抽查、节气、周报、读诗周记、拆解、深读。零依赖纯本地，可选联网（搜韵笺注 + wttr.in）。
+version: 1.4.5
+description: Connect Tang and Song poetry with everyday life — daily poem card, a line for a real moment, plain-language study notes, spaced-repetition review, weekly reading summary. 把唐诗宋词和真实生活连起来：今日日签 / 找一句诗 / 说人话拆解 / 背诗复习 / 读诗周记。五种模式（有感而发 / 学习沉淀 / 今日日签 / 复习验收 / 学习周报）+ 李白全集 + 杜甫苏轼精选诗库。Language scope: Chinese-only by design — the subject is Tang/Song classical Chinese poetry, and no multilingual variant exists or is planned. 中文触发词（须与诗词语境同现才激活）：诗词日签、每日诗词、今日一句、唐诗宋词、古诗配诗、找一句唐诗、诗词拆解、诗词深读、背诗复习、背诗抽查、读诗周记、诗人日签（李白/杜甫/苏轼）。单独出现的"复习""周报""拆解"属通用词，不触发本 skill。Not for academic criticism, metrical composition, or non-Chinese poetry. 零依赖纯本地；联网可选且可关（只发诗名/作者/诗句/城市名，见「数据边界」）。
 ---
 
 # 诗遇 · 唐诗宋词共鸣日签
@@ -20,13 +20,24 @@ description: Connect Tang and Song poetry with everyday life — daily poem card
 - 与通用聊天 AI 比：解读一律说人话、不掉书袋；引用前先核对精读库通行版原文，避免把古籍异文当引用输出。
 - 与背单词式学习工具比：用艾宾浩斯复习 + 场景联想题，落点是把诗用回生活，而不是刷完一遍。
 
+## 语言范围 / Language scope
+
+**本 skill 有意仅支持中文。** 它服务的对象是唐诗宋词——原文、笺注、以及"说人话"的解读全部建立在汉语之上；换成别的语种，诗词本身就是翻译件，要解决的问题也就不存在了。这是设计决定，不是遗漏。
+
+- **不提供多语言版本，也没有相关计划。** 不做语言选择开关：没有可选项时，选项本身就是噪音。
+- 用户用英文或其他语种提问时：说明本 skill 只处理中文诗词，由用户决定是换用中文提问，还是转普通对话。
+- `references/` 下的全部数据（李白全集、杜甫/苏轼精选、主题索引、天气映射、诗人档案、印章二维码）同为中文，理由一致。
+
+**This skill is intentionally Chinese-only.** Its subject is Tang and Song classical Chinese poetry; the source texts, the historical annotations, and the plain-language readings all live in Chinese. There is no multilingual variant and none is planned — translating the poems would remove the very thing the skill exists to work with. Non-Chinese poetry is out of scope (see 「何时不用」 above).
+
 ## 快速开始
 
 安装（二选一）：
 ```bash
-npx clawhub install poetry-resonance
+npx clawhub@0.23.3 install poetry-resonance
 openclaw skills install @bonniegeng-max/poetry-resonance
 ```
+安装命令刻意锁定版本号（`clawhub@0.23.3`）：不锁版本的 `npx <pkg>` 会在上游被投毒时自动拉到恶意版本，属于可复现性风险。
 
 装好后对 agent 说：
 - **看景/经历有感** → "今天项目终于上线了，帮我配句诗"
@@ -52,7 +63,33 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 
 ## 个性化配置
 
-若存在 `~/.workbuddy/poetry-resonance/profile.md`（个人偏好：默认文案风格、日签版式底线、在学诗人等），**优先采用**；不存在则在首次交互时询问用户偏好，并写入该文件（独立于 skill 目录，升级不丢）。
+`~/.workbuddy/poetry-resonance/profile.md` 保存个人偏好：默认文案风格、日签版式底线、在学诗人、联网开关（`online`）、日签二维码开关（`qr`）。已存在时**优先采用**。
+
+**首次写入前必须先告知、后写入**（内容、位置、用途三件事说清楚，见下节「本地数据与隐私」）；用户不同意则不落盘，偏好只在本次对话内生效。
+
+## 本地数据与隐私 / Local data & privacy
+
+本 skill 只在本机读写两个文件，都在 `~/.workbuddy/poetry-resonance/` 下，与 skill 目录分开存放（升级、重装都不丢）：
+
+| 文件 | 存什么 | 用来做什么 |
+|------|--------|-----------|
+| `profile.md` | 文案风格偏好、日签版式底线、在学诗人、联网开关、二维码开关 | 免去每次重复说偏好 |
+| `progress.json` | 诗名、首次学习日期、验收通过日期、复习日期、复习阶段 | 模式 D 艾宾浩斯复习排期 / 模式 E 周报统计 |
+
+**首次写入先取得同意（硬规则）**
+1. 第一次需要创建或更新任一文件前，先说明上面三件事（存什么、存在哪、做什么用），等用户点头；
+2. 用户不同意 → 进入**无持久化模式**：偏好只在本次对话内生效，复习进度不落盘（模式 D 退化为当次抽查，模式 E 只报当次对话内的记录）；
+3. 用户随时可以：
+   - 说"别记了 / 不要写文件" → 停止一切本地写入，本次会话内有效
+   - 说"看看你存了什么" → 读出两个文件的完整内容给用户看
+   - 说"清空我的记录" → 删除 `progress.json`（或 `profile.md`），并确认删除结果
+
+**不收集、不上传**
+- 两个文件的内容**从不经网络发送**，也不写入日志、不做遥测；
+- **不读取 `~/.workbuddy/poetry-resonance/` 以外的任何用户文件**；
+- 联网时的例外只有两个公开查询，且只发四个词之一（诗名/作者/诗句/城市名），详见下节「数据边界」。
+
+**Local files.** This skill reads and writes exactly two files under `~/.workbuddy/poetry-resonance/` — a preference file and a study-progress file — deliberately kept outside the skill directory so upgrades and reinstalls do not lose them. It requires an explicit first-run notice and consent (what, where, why) before the first write, offers a no-persistence mode if the user declines, and supports inspect / stop / delete on request. Contents of these files are never transmitted over the network and never logged; no files outside that directory are read.
 
 ## 背景
 
@@ -68,7 +105,7 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 - `references/poets_profile.md` · **诗人档案**：李白/杜甫/苏轼人生阶段线（每阶段：时间/关键词/代表作/情绪底色+一句话主线）。模式 B 拆解时先定位诗人当时所在阶段，背景自动挂上"人生坐标"；日签推荐理由可用阶段梗。
 - `references/themes.md` · **主题索引**：14 个主题跨诗人（孤独/逆境/得意/岁月/思乡/送别/爱情/壮阔/闲适/旷达/家国/酒/秋/月），每主题含场景速记+代表诗句，是模式 A 匹配的第一入口。精读库扩充时顺手维护。
 - `references/weather_map.md` · **天气映射**：雨/雪/晴/风/雾/暑热/严寒 → 诗句映射，模式 C 日签的天气关联层。
-- `references/seal_qr.svg` · **印章二维码**：指向 ClawHub 页面的真码（红底白模块、中心"诗遇"、H 级容错），日签卡片固定嵌入、直接复用。
+- `references/seal_qr.svg` · **印章二维码**（可选组件，**默认不使用**）：指向 ClawHub 诗遇安装页的真码（红底白模块、中心"诗遇"、H 级容错）。只在用户明确要求分享、或 `profile.md` 里设了 `qr: true` 时才嵌进日签卡片。
 
 使用规则：
 1. **引用核对**：任何模式引用诗句前，先查精读库（人工核定的通行版原文），没有再查底库（先 poets_selected.json 再 libai_raw.json）。**对外引用一律用通行版**（大众认知版，如《静夜思》必须用"床前明月光……举头望明月"）。底库为古籍版本（御定全唐诗），部分诗与通行版有字词差异，**严禁把古籍版异文当引用输出**——对外输出古籍异文会被读者误认为引用错误。底库仅用于全集检索、诗篇定位；版本差异只在用户主动问"原版是什么"时才讲，且要说明"古籍原版"与"通行版"的区别。底库也没有的才用自身知识，并标注"待核实"。
@@ -77,14 +114,25 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 
 ## 权威核对与外部服务（可选，联网时）
 
-- **搜韵开放 API**：`https://api.sou-yun.cn/open/poem?key=<诗名或诗句>&scope=Title|Sentence&jsonType=true`（非商业用途，无需 key 鉴权）。返回含原文、历代笺注（《古今诗话》《诗薮》等带出处）、体裁、韵部——可用于：版本异文核对、模式 B 深读档的笺注素材（取 1-2 条译成人话，翻不出人话宁可不用）。
-- **wttr.in 天气**：`https://wttr.in/<城市拼音>?format=j1`（免 key，开源）。模式 C 日签天气关联层使用。
+本 skill 的底座是**纯本地**的——不联网也能跑全部五种模式。下面两个外部查询是可选增强，只在联网且未被关闭时使用。
 
-**硬约束（数据边界）**：外部查询只允许以**诗名/作者/诗句/城市名**为关键词，**严禁将用户个人描述、经历原文、学习进度、文案内容发送给任何外部 API**。API 不可用或离线时静默跳过，不影响任何模式（零依赖底座）。
+| 服务 | 端点 | 发出去的只有 | 用途 |
+|------|------|-------------|------|
+| 搜韵开放 API | `https://api.sou-yun.cn/open/poem?key=<诗名或诗句>&scope=Title|Sentence&jsonType=true` | 诗名 / 作者 / 诗句 | 版本异文核对；模式 B 深读档的历代笺注素材（取 1-2 条译成人话，翻不出人话宁可不用） |
+| wttr.in | `https://wttr.in/<城市拼音>?format=j1` | 城市名 | 模式 C 日签的天气关联层 |
+
+**为什么是这两个**：中文历代笺注与免注册天气这两个用途上，没有更合适的公开替代。两者都是**只读、免 key** 的公开接口——不传任何凭证、token、账号或身份信息，也不需要读取环境变量。搜韵注明为非商业用途接口，wttr.in 为开源服务。
+
+**硬约束（数据边界）**
+- 外部查询只允许以**诗名 / 作者 / 诗句 / 城市名**为关键词，四个字段之外一律不发。
+- **严禁**将用户个人描述、经历原文、学习进度、`profile.md` 或 `progress.json` 的任何内容、以及生成的文案发送给任何外部 API。
+- API 不可用或离线时静默跳过，不影响任何模式。
+
+**关闭方式**：在 `profile.md` 里写 `online: false`（或对 agent 说"别联网"），即完全关闭这两个查询，五种模式照常运行。
 
 ## 学习进度
 
-`~/.workbuddy/poetry-resonance/progress.json`（模式 D 使用，不存在则自动创建），结构：
+`~/.workbuddy/poetry-resonance/progress.json`（模式 D 使用），结构：
 
 ```json
 {
@@ -100,7 +148,7 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 }
 ```
 
-独立于 skill 目录存放，skill 升级/重装不影响学习进度。
+独立于 skill 目录存放，skill 升级/重装不影响学习进度。**首次创建前须先告知并取得同意**；用户不同意则不落盘（模式 D 退化为当次抽查）。查看 / 停止 / 删除的入口见「本地数据与隐私」。
 
 ## 模式 A · 有感而发
 
@@ -149,7 +197,7 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 工作流：
 1. 识别今天日期，找关联点（按优先级）：
    - 节气（处暑、霜降、冬至……）或季节物候（烟花三月→暮春踏青）
-   - **天气**（查 references/weather_map.md）：联网时调 wttr.in 免 key API（`https://wttr.in/<城市拼音>?format=j1`，从用户说过/档案中的城市查询；只发城市名）获取天气类别，映射诗句；API 失败静默跳过；用户口报"今天下雨"可直接替代。同天节气与天气都强关联时，节气优先、天气作辅助理由（"处暑，又赶上一场秋雨"）
+   - **天气**（查 references/weather_map.md）：联网且未关闭时调 wttr.in 免 key API（`https://wttr.in/<城市拼音>?format=j1`，从用户说过/档案中的城市查询；只发城市名）获取天气类别，映射诗句；API 失败静默跳过；用户口报"今天下雨"可直接替代。同天节气与天气都强关联时，节气优先、天气作辅助理由（"处暑，又赶上一场秋雨"）
    - 历史上的今天（作者生卒、创作纪念日，如不确定要标注存疑）
    - 星期/时段情绪（周一开工→"长风破浪会有时"；周五→"仰天大笑出门去"）
 2. **诗人轮换**：候选从精读库优先（节气关联优先），底库补充（现场生成人话背景）。多位诗人可用时按周轮换主题（李白周/杜甫周/苏轼周），避免单一诗人刷屏；同一位诗人连续出现不超过 2 天
@@ -159,7 +207,7 @@ openclaw skills install @bonniegeng-max/poetry-resonance
    - 为什么是今天：推荐理由（节气/天气/日期与诗的连接点）
    - 人话背景：一两句，作者是谁、当时在干嘛
    - 寓意期盼：一句落到今天生活的祝福或提醒
-4. **印章二维码**：卡片固定嵌入 `references/seal_qr.svg` 的内容（指向 ClawHub 安装页，真码可扫）——`<g transform="translate(x,y) scale(2.33)">` 内联红底 rect+path+中心"诗遇"二字，放卡片左下/右下空区，旁配竖排小字"扫码取同款"。码内容固定，直接复用文件内容，不要重新生成
+4. **印章二维码（可选，默认不嵌）**：卡片默认**不**带二维码——卡片是给用户读的，不是推广位。只有当用户明确要求（"加个二维码 / 我要分享出去"）或 `profile.md` 里设了 `qr: true` 时，才把 `references/seal_qr.svg` 的内容内联进去——`<g transform="translate(x,y) scale(2.33)">` 红底 rect+path+中心"诗遇"二字，放卡片左下/右下空区，旁配竖排小字"扫码取同款"。码内容固定，直接复用文件内容，不要重新生成
 5. 可配图（水墨意境），日签文案保持卡片式短句排版
 6. 卡片后带钩子："想深读这首，说一声"（升级深读入口）
 
@@ -214,4 +262,5 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 - 用户学习不深，解释宁可浅白也不要玄乎；有争议的解读注明是"一种读法"
 - 日签卡片版式不固定，按节气/主题灵活设计；两条底线：竖排为主、避免横竖混排，诗句列对齐不刻意错落
 - 底库数据来源：chinese-poetry 项目（github.com/chinese-poetry/chinese-poetry），MIT License
-- 外部 API（搜韵）仅限诗词关键词查询，严禁外发用户任何个人内容（见"权威核对"章节硬约束）
+- 外部 API（搜韵 / wttr.in）仅限诗词关键词与城市名查询，严禁外发用户任何个人内容；可用 `profile.md` 的 `online: false` 整体关闭（见"权威核对"章节数据边界）
+- 本地只读写 `~/.workbuddy/poetry-resonance/` 下的 `profile.md` 与 `progress.json`，首次写入先告知并取得同意（见"本地数据与隐私"）

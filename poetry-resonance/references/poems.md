@@ -1,5 +1,7 @@
 # 诗库 · 李白卷 + 杜甫卷
 
+> **语言范围 / Language scope**：本文件有意仅用中文——收录的是唐诗原文与汉语解读。This file is intentionally Chinese-only: it holds the Chinese source texts and Chinese-language readings. 见 `SKILL.md` →「语言范围 / Language scope」。
+
 > 结构化诗库。李白 27 首 + 杜甫 18 首，字段含「朝代·作者」，后续扩展其他诗人直接追加条目即可。
 > 共鸣场景要具体到生活/工作画面，不要泛泛。
 
