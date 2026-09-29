@@ -1,7 +1,7 @@
 ---
 name: poetry-resonance
-version: 1.4.6
-description: Connect Tang and Song poetry with everyday life — daily poem card, a line for a real moment, plain-language study notes, spaced-repetition review, weekly reading summary. 把唐诗宋词和真实生活连起来：今日日签 / 找一句诗 / 说人话拆解 / 背诗复习 / 读诗周记。五种模式（有感而发 / 学习沉淀 / 今日日签 / 复习验收 / 学习周报）+ 李白全集 + 杜甫苏轼精选诗库。Language scope: Chinese-only by design — the subject is Tang/Song classical Chinese poetry, and no multilingual variant exists or is planned. 中文触发词（须与诗词语境同现才激活）：诗词日签、每日诗词、今日一句、唐诗宋词、古诗配诗、找一句唐诗、诗词拆解、诗词深读、背诗复习、背诗抽查、读诗周记、诗人日签（李白/杜甫/苏轼）。单独出现的"复习""周报""拆解"属通用词，不触发本 skill。Not for academic criticism, metrical composition, or non-Chinese poetry. 零依赖纯本地；联网可选且可关（只发诗名/作者/诗句/城市名，见「数据边界」）。
+version: 1.5.0
+description: Connect Tang and Song poetry with everyday life — daily poem card, a line for a real moment, plain-language study notes, spaced-repetition review, weekly reading summary. 把唐诗宋词和真实生活连起来：今日日签 / 找一句诗 / 说人话拆解 / 背诗复习 / 读诗周记。五种模式（有感而发 / 学习沉淀 / 今日日签 / 复习验收 / 学习周报）+ 李白全集 + 杜甫苏轼精选诗库。另有导出（把学习记录导成 md / Anki 兼容 CSV）。Language scope: Chinese-only by design — the subject is Tang/Song classical Chinese poetry, and no multilingual variant exists or is planned. 中文触发词（须与诗词语境同现才激活）：诗词日签、每日诗词、今日一句、唐诗宋词、古诗配诗、找一句唐诗、诗词拆解、诗词深读、背诗复习、背诗抽查、读诗周记、诗人日签（李白/杜甫/苏轼）、导出诗单、导出学习记录。单独出现的"复习""周报""拆解"属通用词，不触发本 skill。Not for academic criticism, metrical composition, or non-Chinese poetry. 零依赖纯本地；联网可选且可关（只发诗名/作者/诗句/城市名，见「数据边界」）。
 ---
 
 # 诗遇 · 唐诗宋词共鸣日签
@@ -44,6 +44,7 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 - **学一首诗** → "拆解《水调歌头》"
 - **要日签** → "今日一句"
 - **看学习周报** → "读诗周记"
+- **导出学习记录** → "导出我的诗单"（模式 F）
 
 日签输出效果示例：
 
@@ -71,17 +72,18 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 
 本 skill 只会碰到下面**两个位置**的文件，除此之外不读、不写、不枚举任何文件。
 
-**① 用户数据（两个文件）** —— 在 `~/.workbuddy/poetry-resonance/` 下，与 skill 目录分开存放（升级、重装都不丢）：
+**① 用户数据** —— 在 `~/.workbuddy/poetry-resonance/` 下，与 skill 目录分开存放（升级、重装都不丢）。核心是 `profile.md` 与 `progress.json` 两件；`export-*.md` 只在用户主动导出时出现：
 
 | 文件 | 存什么 | 用来做什么 |
 |------|--------|-----------|
 | `profile.md` | 文案风格偏好、日签版式底线、在学诗人、联网开关、二维码开关 | 免去每次重复说偏好 |
-| `progress.json` | 诗名、首次学习日期、验收通过日期、复习日期、复习阶段 | 模式 D 艾宾浩斯复习排期 / 模式 E 周报统计 |
+| `progress.json` | 诗名、首次学习日期、验收通过日期、复习日期、复习阶段 | 模式 D 艾宾浩斯复习排期 / 模式 E 周报统计 / 模式 D 复习回执 / 模式 F 导出 |
+| `export-YYYYMMDD.md`（可选） | 由用户主动导出的学习记录（人话版诗单；另可选 Anki 兼容 CSV） | 模式 F 导出产物——**只在用户说"导出诗单"时生成**，不自动产生 |
 
 **② skill 自带的诗库（不是用户数据）** —— `references/poems.md`、`references/themes.md` 等是 skill 安装时自带的内容文件。它们**只会在用户明确说"诗库加一首《XX》"时被追加写入**（见「使用规则 · 扩库流程」），不自动写、不删除既有条目；用户不发起扩库，这些文件就全程只读。
 
 **首次写入先取得同意（硬规则）**
-1. 第一次需要创建或更新 `profile.md` / `progress.json` 前，先说明上面三件事（存什么、存在哪、做什么用），等用户点头；
+1. 第一次需要创建或更新 `profile.md` / `progress.json` 前，先说明上面三件事（存什么、存在哪、做什么用），等用户点头；（`export-*.md` 由用户主动说"导出诗单"触发，属于用户请求本身，无需额外同意，但仍只写在该目录内）
 2. 用户不同意 → 进入**无持久化模式**：偏好只在本次对话内生效，复习进度不落盘（模式 D 退化为当次抽查，模式 E 只报当次对话内的记录）；
 3. 用户随时可以：
    - 说"别记了 / 不要写文件" → 停止一切本地写入（含扩库），本次会话内有效
@@ -93,7 +95,7 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 - 不读取、不遍历这两个位置以外的任何用户文件；
 - 联网时的例外只有两个公开查询，且只发四个词之一（诗名/作者/诗句/城市名），详见下节「数据边界」。
 
-**Local files.** This skill touches files in exactly two places and nothing else. (1) **User data** — two files under `~/.workbuddy/poetry-resonance/`, a preference file and a study-progress file, deliberately outside the skill directory so upgrades and reinstalls do not lose them. An explicit first-run notice and consent (what, where, why) is required before the first write; a no-persistence mode is offered if the user declines; inspect / stop / delete are supported on request. (2) **The skill's own bundled library** — `references/poems.md` and `references/themes.md` ship with the skill and are appended to *only* when the user explicitly asks to add a poem; never written automatically and never used to remove existing entries. Contents of the user-data files are never transmitted over the network and never logged. No files outside these two locations are read, enumerated, or written.
+**Local files.** This skill touches files in exactly two places and nothing else. (1) **User data** — two core files under `~/.workbuddy/poetry-resonance/` (a preference file and a study-progress file), deliberately outside the skill directory so upgrades and reinstalls do not lose them; an optional `export-*.md` appears only when the user explicitly asks for an export. An explicit first-run notice and consent (what, where, why) is required before the first write; a no-persistence mode is offered if the user declines; inspect / stop / delete are supported on request. (2) **The skill's own bundled library** — `references/poems.md` and `references/themes.md` ship with the skill and are appended to *only* when the user explicitly asks to add a poem; never written automatically and never used to remove existing entries. Contents of the user-data files are never transmitted over the network and never logged. No files outside these two locations are read, enumerated, or written.
 
 ## 背景
 
@@ -226,6 +228,19 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 2. **复习**：读 progress.json，按间隔计算到期诗单（今天 - last_review ≥ 当前 stage 对应间隔）→ 每首出一题 → 判定 → 通过则 review_stage+1、更新 last_review；全部 stage 走完标记"已烂熟"
 3. 到期诗单为空时回复："今天没有到期的诗" + 建议学一首新的或看看今日日签
 4. 学习闭环：模式 B 拆解 → 当天或次日晚验收 → 按间隔自动进入复习轮换
+5. **本轮回执（每轮复习收尾必出）**：把今天这一轮的结果收成一张小卡，数据全部来自 `progress.json`，不新增任何文件：
+   ```
+   ── 本轮复习 ──
+   复习 3 首 · 通过 2 首
+   累计烂熟 12 首 · 复习池 26 首
+   ⏭ 下一首到期：《静夜思》· 10 月 2 日
+   🔥 连续第 7 天
+   ```
+   - 「通过」按本轮判定结果计；未通过的进下一轮，不写负面评价
+   - 「烂熟」= review_stage 走完 6 阶的；「复习池」= 已入池未烂熟
+   - 「下一首到期」= 复习池中 last_review + 当前 stage 间隔最早到期的诗
+   - 「连续第 N 天」= 有学习/复习记录的自然日连击；**断档不提、不批评**（对齐模式 E 的"不打卡焦虑"语气）
+   - 无持久化模式下不出这张卡，改为当次抽查结果一句话收尾
 
 题型（三选一轮换，复习一首用一种）：
 1. **接句**：给上句背下句（"飞流直下三千尺——？"）
@@ -250,6 +265,34 @@ openclaw skills install @bonniegeng-max/poetry-resonance
    - **周报**：数据一览 + 本周最有感觉的一句（从本周学的诗里选金句）
    - **读诗周记**（朋友圈可发）：一段 100 字内的轻文案，如"跟李白杜甫苏轼过了一周，最常背错的是'随君直到夜郎西'。下周想学《定风波》。"
 4. 语气：轻、不打卡焦虑——没学也说"本周休了个假，诗不会跑"，不催不评判
+
+## 模式 F · 导出学习记录
+
+触发：用户说"导出我的诗单"、"导出学习记录"、"把我的记录导出来"。
+
+**为什么有这一节**：`progress.json` 是私有格式，用户读不了也带不走。学习的资产属于用户——能导出，才谈得上"这是我的"。这也是与背单词式工具（可导出 Anki 卡组）对齐的一环。
+
+工作流：
+1. 读 `progress.json`，按三段整理：**已烂熟 / 复习中 / 刚学（未验收）**
+2. 默认导出**人话版 md**，写到 `~/.workbuddy/poetry-resonance/export-YYYYMMDD.md`：
+   ```markdown
+   # 我的诗单 · 2026-09-29
+
+   ## 已烂熟（12 首）
+   - 《静夜思》· 李白 · 首次学习 8-23 · 走完 6 阶复习
+
+   ## 复习中（26 首）
+   - 《望庐山瀑布》· 李白 · 阶段 3/6 · 下次复习 10-2
+
+   ## 刚学未验收（2 首）
+   - 《闻王昌龄左迁龙标遥有此寄》· 李白 · 9-28
+
+   ---
+   连续学习 7 天 · 共 40 首入池 · 由诗遇导出
+   ```
+3. 用户说"要 Anki 格式"时，额外生成同名 CSV（列：`诗名,作者,金句,阶段,首次学习,下次复习`），可直接作为间隔重复卡组底稿
+4. 导出完成后**告知文件路径**，并说明这是本地文件、不上传；不主动部署、不生成公网链接
+5. `progress.json` 本身**只读不改**；导出失败（文件不存在）就直说"还没有学习记录，先去拆解一首"，不要编造条目
 
 ## 文案风格模板（四选一或混搭，默认问用户偏好）
 

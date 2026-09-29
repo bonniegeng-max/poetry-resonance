@@ -3,6 +3,21 @@
 > **语言范围 / Language scope**：本文件与整个 skill 一样，有意仅用中文——服务对象是唐诗宋词，非中文语种没有对应素材。理由见 `SKILL.md` →「语言范围 / Language scope」。
 > This changelog is intentionally Chinese-only for the same reason the skill is: its subject matter is classical Chinese poetry.
 
+## v1.5.0 — 2026-09-29
+
+学习闭环补完：复习看得见结果，记录带得走。不改动诗库内容与输出风格，`progress.json` 字段不变（老用户升级无损）。
+
+**新增**
+
+- **模式 D 第 5 步 · 本轮回执**：每轮复习收尾固定出一张小卡——本轮复习/通过数、累计烂熟与复习池、下一首到期日期、连续学习天数。数据全部来自 `progress.json`，不新增文件；无持久化模式下不出此卡。
+- **模式 F · 导出学习记录**：触发词"导出我的诗单 / 导出学习记录"。读 `progress.json`，默认导人话版 md（已烂熟 / 复习中 / 刚学未验收 三段）到 `~/.workbuddy/poetry-resonance/export-YYYYMMDD.md`；用户要"Anki 格式"时另出 CSV（诗名,作者,金句,阶段,首次学习,下次复习）。`progress.json` 只读不改。
+- README「功能」补齐模式 E / F。
+
+**隐私段同步更新（重要）**
+
+- 因为新增了 `export-*.md`，`SKILL.md`「本地数据与隐私」的表与英文段同步改为如实描述：核心两文件（`profile.md` / `progress.json`）+ 仅在用户主动导出时出现的 `export-*.md`，仍只落在 `~/.workbuddy/poetry-resonance/` 一个目录内。
+- 这是 v1.4.6 同类问题的预防：**文档声明的文件集合必须与实际写入的完全一致**（v1.4.5 → v1.4.6 正是因"说法与行为不一致"被 ClawScan 指出的）。本次先改文档再动行为，声明与实现同步。
+
 ## v1.4.6 — 2026-09-13
 
 修正 v1.4.5 里一处**表述与行为不一致**的问题（ClawHub 重新扫描后 ClawScan 新指出的点）：
