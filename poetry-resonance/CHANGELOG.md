@@ -3,6 +3,13 @@
 > **语言范围 / Language scope**：本文件与整个 skill 一样，有意仅用中文——服务对象是唐诗宋词，非中文语种没有对应素材。理由见 `SKILL.md` →「语言范围 / Language scope」。
 > This changelog is intentionally Chinese-only for the same reason the skill is: its subject matter is classical Chinese poetry.
 
+## v1.5.1 — 2026-09-29
+
+发布元数据修复，功能与文件内容无变化。
+
+- 恢复 ClawHub 显示名为 `诗遇 Poetry Resonance`。1.5.0 发布时未带 `--name`，ClawHub 回退成裸 slug，中文名「诗遇」丢失。
+- 发版提醒：**务必带 `--name "诗遇 Poetry Resonance"`**，命令为 `clawhub publish --name "诗遇 Poetry Resonance" --slug poetry-resonance --version <v>`。
+
 ## v1.5.0 — 2026-09-29
 
 学习闭环补完：复习看得见结果，记录带得走。不改动诗库内容与输出风格，`progress.json` 字段不变（老用户升级无损）。
