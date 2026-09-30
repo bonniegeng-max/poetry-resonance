@@ -3,6 +3,14 @@
 > **语言范围 / Language scope**：本文件与整个 skill 一样，有意仅用中文——服务对象是唐诗宋词，非中文语种没有对应素材。理由见 `SKILL.md` →「语言范围 / Language scope」。
 > This changelog is intentionally Chinese-only for the same reason the skill is: its subject matter is classical Chinese poetry.
 
+## v1.5.2 — 2026-09-30
+
+安全扫描修复（SkillSpector "Intent-Code Divergence"，Medium）：隐私声明与实际行为再次对齐。功能、诗库、数据结构均无变化。
+
+- **问题**：v1.5.1 隐私段承诺"只碰两个位置的文件，除此之外不读不写不枚举"，但正文有两处行为超出该承诺——模式 B 步骤 7 的"存 ima 知识库 / 腾讯文档 / 本地文件"选项、模式 A 步骤 4 的 ImageGen 可选配图。声明比行为说得满，触发 Intent-Code Divergence。
+- **修复**：不删功能，改声明如实——隐私段（中英文）加"默认"限定，新增「用户主动发起的例外」小节，明确列出两类用户请求驱动的动作；模式 B 步骤 7 与「约束」段同步对齐表述。
+- 这是 v1.4.6 / v1.5.0 之后第三次声明-行为对齐：原则不变——**功能可以超出默认边界，但声明必须覆盖所有实际路径，且超出部分必须由用户主动发起**。
+
 ## v1.5.1 — 2026-09-29
 
 发布元数据修复，功能与文件内容无变化。

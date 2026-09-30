@@ -1,6 +1,6 @@
 ---
 name: poetry-resonance
-version: 1.5.1
+version: 1.5.2
 description: Connect Tang and Song poetry with everyday life — daily poem card, a line for a real moment, plain-language study notes, spaced-repetition review, weekly reading summary. 把唐诗宋词和真实生活连起来：今日日签 / 找一句诗 / 说人话拆解 / 背诗复习 / 读诗周记。五种模式（有感而发 / 学习沉淀 / 今日日签 / 复习验收 / 学习周报）+ 李白全集 + 杜甫苏轼精选诗库。另有导出（把学习记录导成 md / Anki 兼容 CSV）。Language scope: Chinese-only by design — the subject is Tang/Song classical Chinese poetry, and no multilingual variant exists or is planned. 中文触发词（须与诗词语境同现才激活）：诗词日签、每日诗词、今日一句、唐诗宋词、古诗配诗、找一句唐诗、诗词拆解、诗词深读、背诗复习、背诗抽查、读诗周记、诗人日签（李白/杜甫/苏轼）、导出诗单、导出学习记录。单独出现的"复习""周报""拆解"属通用词，不触发本 skill。Not for academic criticism, metrical composition, or non-Chinese poetry. 零依赖纯本地；联网可选且可关（只发诗名/作者/诗句/城市名，见「数据边界」）。
 ---
 
@@ -70,7 +70,7 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 
 ## 本地数据与隐私 / Local data & privacy
 
-本 skill 只会碰到下面**两个位置**的文件，除此之外不读、不写、不枚举任何文件。
+本 skill **默认**只会碰到下面**两个位置**的文件，除此之外不读、不写、不枚举任何文件。唯一例外：用户在对话中**主动要求**的保存动作（如"把这篇笔记存到 ima / 腾讯文档 / 某个本地路径"），见本节末尾「用户主动发起的例外」。
 
 **① 用户数据** —— 在 `~/.workbuddy/poetry-resonance/` 下，与 skill 目录分开存放（升级、重装都不丢）。核心是 `profile.md` 与 `progress.json` 两件；`export-*.md` 只在用户主动导出时出现：
 
@@ -92,10 +92,18 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 
 **不收集、不上传**
 - 上述文件的内容**从不经网络发送**，也不写入日志、不做遥测；
-- 不读取、不遍历这两个位置以外的任何用户文件；
+- 默认不读取、不遍历这两个位置以外的任何用户文件；
 - 联网时的例外只有两个公开查询，且只发四个词之一（诗名/作者/诗句/城市名），详见下节「数据边界」。
 
-**Local files.** This skill touches files in exactly two places and nothing else. (1) **User data** — two core files under `~/.workbuddy/poetry-resonance/` (a preference file and a study-progress file), deliberately outside the skill directory so upgrades and reinstalls do not lose them; an optional `export-*.md` appears only when the user explicitly asks for an export. An explicit first-run notice and consent (what, where, why) is required before the first write; a no-persistence mode is offered if the user declines; inspect / stop / delete are supported on request. (2) **The skill's own bundled library** — `references/poems.md` and `references/themes.md` ship with the skill and are appended to *only* when the user explicitly asks to add a poem; never written automatically and never used to remove existing entries. Contents of the user-data files are never transmitted over the network and never logged. No files outside these two locations are read, enumerated, or written.
+**用户主动发起的例外（如实声明，避免说法与行为不一致）**
+
+以下动作**不在默认行为里**，只有用户在对话中明确要求时才发生，本质是执行用户自己的指令而非 skill 主动触碰：
+1. 模式 B 步骤 7 提供的选项——把学习笔记存入 ima 知识库、腾讯文档或用户指定的本地路径；
+2. 模式 A 步骤 4 的可选配图——调 ImageGen 生成水墨意境图（图片文件由用户的生成工具落盘，本 skill 不额外枚举文件系统）。
+
+用户不发起，这些路径一个都不会被碰到。除上述两类外，**不存在**其他任何超出「两个位置」的读写。
+
+**Local files.** By default, this skill touches files in exactly two places and nothing else. (1) **User data** — two core files under `~/.workbuddy/poetry-resonance/` (a preference file and a study-progress file), deliberately outside the skill directory so upgrades and reinstalls do not lose them; an optional `export-*.md` appears only when the user explicitly asks for an export. An explicit first-run notice and consent (what, where, why) is required before the first write; a no-persistence mode is offered if the user declines; inspect / stop / delete are supported on request. (2) **The skill's own bundled library** — `references/poems.md` and `references/themes.md` ship with the skill and are appended to *only* when the user explicitly asks to add a poem; never written automatically and never used to remove existing entries. Contents of the user-data files are never transmitted over the network and never logged. The only exceptions to the two-location rule are actions the *user* explicitly requests in conversation — saving a generated study note to the user's chosen destination (e.g. an ima knowledge base, Tencent Docs, or a user-specified local path), or invoking image generation for an optional illustration — which execute the user's own instruction rather than skill-initiated access. No other files outside these two locations are read, enumerated, or written.
 
 ## 背景
 
@@ -188,7 +196,7 @@ openclaw skills install @bonniegeng-max/poetry-resonance
    - 同主题不同诗人：跨诗人对照（如思乡三家：李白"低头思故乡"一秒击中 / 杜甫"月是故乡明"明知是错觉的偏爱 / 苏轼"千里共婵娟"见不到就共一轮月）
    - 学过的对照：用户 progress.json 里近期学过同主题的诗时主动提议（见下方"自动化触发"）
 6. **历代笺注**（仅深读档且联网时）：调搜韵 API，取 1-2 条历代评点**译成人话**带入（如《诗薮》评"欲穷千里目"——古人也觉得这句收得绝）。分寸红线：笺注是佐料不是主菜，翻不出人话宁可不用，严禁掉书袋
-7. 整理成学习笔记（markdown），问用户要不要存 ima 知识库 / 腾讯文档 / 本地文件
+7. 整理成学习笔记（markdown），问用户要不要存 ima 知识库 / 腾讯文档 / 本地文件（仅在用户同意后写；属于用户主动发起的外部保存，见「本地数据与隐私 · 用户主动发起的例外」）
 8. 顺手送一句可发朋友圈的短文案
 9. 自动记录：将该诗写入 progress.json（first_learned=今天）；若该诗不在精读库，**先问用户要不要入库**，同意后再按扩库流程追加（同时挂主题标签进 themes.md）——不擅自写入 skill 自身目录
 
@@ -310,4 +318,4 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 - 日签卡片版式不固定，按节气/主题灵活设计；两条底线：竖排为主、避免横竖混排，诗句列对齐不刻意错落
 - 底库数据来源：chinese-poetry 项目（github.com/chinese-poetry/chinese-poetry），MIT License
 - 外部 API（搜韵 / wttr.in）仅限诗词关键词与城市名查询，严禁外发用户任何个人内容；可用 `profile.md` 的 `online: false` 整体关闭（见"权威核对"章节数据边界）
-- 本地只碰两个位置：`~/.workbuddy/poetry-resonance/` 下的 `profile.md` 与 `progress.json`（首次写入先告知并取得同意），以及 skill 自身目录下的 `references/*.md`（仅在用户明确要求扩库时追加）；其余文件不读不写不枚举（见"本地数据与隐私"）
+- 本地默认只碰两个位置：`~/.workbuddy/poetry-resonance/` 下的 `profile.md` 与 `progress.json`（首次写入先告知并取得同意），以及 skill 自身目录下的 `references/*.md`（仅在用户明确要求扩库时追加）；其余文件不读不写不枚举。唯一例外是用户主动发起的保存动作（存 ima / 腾讯文档 / 指定路径、可选配图），见"本地数据与隐私 · 用户主动发起的例外"
