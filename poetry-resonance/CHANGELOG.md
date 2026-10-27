@@ -3,6 +3,18 @@
 > **语言范围 / Language scope**：本文件与整个 skill 一样，有意仅用中文——服务对象是唐诗宋词，非中文语种没有对应素材。理由见 `SKILL.md` →「语言范围 / Language scope」。
 > This changelog is intentionally Chinese-only for the same reason the skill is: its subject matter is classical Chinese poetry.
 
+## v1.5.5 — 2026-10-27
+
+触发词策略调整（1.5.4 的延续），功能与诗库无变化。
+
+- **撤回 bare 通用触发词**：「古诗背诵」「古诗学习」「学古诗」「古诗词」。理由：①正面竞品（跨时空古文对话类背诗工具）已盘踞这些词，硬碰无胜算；②歧义度高，易误触发到"陪背课文"场景。
+- **换入场景化长尾触发词**：「这句诗适合发朋友圈吗」「今天读到一句诗」「这句诗什么意思」——指向诗遇的真正差异点：把诗配回生活场景，而不是陪背。
+- ClawHub topics 同步：撤「古诗词」，换「每日一诗」。
+
+## v1.5.4 — 2026-10-26
+
+触发词补充与版本对齐（补记）：description 触发词列表扩充，版本号与各处记录对齐。功能无变化。
+
 ## v1.5.2 — 2026-09-30
 
 安全扫描修复（SkillSpector "Intent-Code Divergence"，Medium）：隐私声明与实际行为再次对齐。功能、诗库、数据结构均无变化。
