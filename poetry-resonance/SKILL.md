@@ -1,7 +1,7 @@
 ---
 name: poetry-resonance
-version: 1.5.5
-description: Connect Tang and Song poetry with everyday life — daily poem card, a line for a real moment, plain-language study notes, spaced-repetition review, weekly reading summary. 把唐诗宋词和真实生活连起来：今日日签 / 找一句诗 / 说人话拆解 / 背诗复习 / 读诗周记。五种模式（有感而发 / 学习沉淀 / 今日日签 / 复习验收 / 学习周报）+ 李白全集 + 杜甫苏轼精选诗库。另有导出（把学习记录导成 md / Anki 兼容 CSV）。Language scope: Chinese-only by design — the subject is Tang/Song classical Chinese poetry, and no multilingual variant exists or is planned. 中文触发词（须与诗词语境同现才激活）：诗词日签、每日诗词、今日一句、唐诗宋词、古诗配诗、找一句唐诗、这句诗适合发朋友圈吗、今天读到一句诗、这句诗什么意思、诗词拆解、诗词深读、背诗复习、背诗抽查、读诗周记、诗人日签（李白/杜甫/苏轼）、导出诗单、导出学习记录。刻意不用"古诗背诵/古诗学习/学古诗/古诗词"这类 bare 通用词（正面竞品盘踞，且歧义度高），改用场景化长尾触发。单独出现的"复习""周报""拆解"属通用词，不触发本 skill。Not for academic criticism, metrical composition, or non-Chinese poetry. 零依赖纯本地；联网可选且可关（只发诗名/作者/诗句/城市名，见「数据边界」）。
+version: 1.5.6
+description: 把唐诗宋词和真实生活连起来：今日日签 / 找一句诗 / 说人话拆解 / 背诗复习 / 读诗周记。五种模式（有感而发 / 学习沉淀 / 今日日签 / 复习验收 / 学习周报）+ 李白全集 + 杜甫苏轼精选诗库。另有导出（把学习记录导成 md / Anki 兼容 CSV）。Connect Tang and Song poetry with everyday life — daily poem card, a line for a real moment, plain-language study notes, spaced-repetition review, weekly reading summary. Language scope: Chinese-only by design — the subject is Tang/Song classical Chinese poetry, and no multilingual variant exists or is planned. 中文触发词（须与诗词语境同现才激活）：诗词日签、每日诗词、今日一句、唐诗宋词、古诗配诗、找一句唐诗、这句诗适合发朋友圈吗、今天读到一句诗、这句诗什么意思、诗词拆解、诗词深读、背诗复习、背诗抽查、读诗周记、诗人日签（李白/杜甫/苏轼）、导出诗单、导出学习记录。刻意不用"古诗背诵/古诗学习/学古诗/古诗词"这类 bare 通用词（正面竞品盘踞，且歧义度高），改用场景化长尾触发。单独出现的"复习""周报""拆解"属通用词，不触发本 skill。Not for academic criticism, metrical composition, or non-Chinese poetry. 零依赖纯本地；联网可选且可关（只发诗名/作者/诗句/城市名，见「数据边界」）。
 ---
 
 # 诗遇 · 唐诗宋词共鸣日签
@@ -265,7 +265,11 @@ openclaw skills install @bonniegeng-max/poetry-resonance
 1. 读 `~/.workbuddy/poetry-resonance/progress.json`，统计本周（周一至今）：
    - 新学 X 首（first_learned 在本周）
    - 验收 Y 次、复习通过 Z 次
-   - 连续学习天数（有记录的自然日跨度）
+   - **坚持度**（新增，三条，全部由 `progress.json` 现有日期字段现算，不新增文件、不改数据结构）：
+     - 连续学习天数（截至今天的连击；昨日无记录即为 0，**不追问、不批评、不补卡**）
+     - 近 7 天有记录的天数（`x/7`）——比连击更抗波动，是"你没掉队"的稳妥证据
+     - 累计有记录天数（历史总天数，一行小字即可）
+     - 口径统一：一个自然日只要有任意一次学习或复习记录即计入；同一日不重复计；无持久化模式下不出坚持度
    - 本周背错过、被纠正过的句子（如有，温故亮点）
    - 诗人分布（李白/杜甫/苏轼各几首）
 2. **主动核对补录（必做，不等用户来纠正）**：进度文件只记模式 B 走过的诗，用户口头学过、日签里顺手读过的都不会在里面——统计完先问一句"这周还有别的吗？没走拆解的我来补录"，用户报了就补进 progress.json（first_learned=本周、note 标注补录）再出周报；自动化无人在场时，周报末尾固定带一句"这周还有没记上的，说一声我来补"
